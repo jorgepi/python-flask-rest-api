@@ -12,6 +12,7 @@ jobs:
           docker tag jorgepi/python-res-api:$TAG jorgepi/python-res-api:latest
           docker push jorgepi/python-res-api:latest
   deploy:
+    working_directory: ~/app
     machine: true
     steps:
       - checkout
