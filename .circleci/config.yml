@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  build-push:
     machine: true
     steps:
       - checkout
@@ -11,3 +11,20 @@ jobs:
           docker push jorgepi/python-res-api:$TAG
           docker tag jorgepi/python-res-api:$TAG jorgepi/python-res-api:latest
           docker push jorgepi/python-res-api:latest
+  deploy:
+    working_directory: ~/app
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Deploy Master to Heroku
+          command: git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build-push
+      - deploy:
+          requires:
+            - build-push
